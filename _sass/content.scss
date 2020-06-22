@@ -1,0 +1,16 @@
+.content {
+  display: grid;
+  .maincol {   
+    width: 100%;
+  }
+}
+
+@media screen and (min-width: 600px) {
+  .content {
+    justify-content: center;
+    .maincol {
+      width: 600px;
+    }
+  }
+}
+

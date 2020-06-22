@@ -1,0 +1,31 @@
+#digits {
+  .card {
+    width: 100%;
+  }
+  canvas {
+    margin-bottom: 25px;
+    border: 1px solid grey;
+    background: #eee;
+    width: 100%;
+    max-width: 260px;
+    height: 300px;
+  }
+  #prompt {
+    font-size: 20px;
+  }
+  #result-prompt {
+    font-size: 20px;
+    margin-top: 15px;
+    margin-bottom: 20px;
+    float: left;
+  }
+  #result {
+    float: right;
+    font-size: 35px;
+    font-weight: bold;
+  }
+  #clear {
+      margin-bottom: 20px;
+  }
+}
+

@@ -1,0 +1,23 @@
+$shadow: 0.05em 0.05em 0.10em 0.10em #ddd;
+
+.card {
+  background-color: white;
+  padding: 20px 20px;
+  margin-top: 20px;
+  border-radius: 10px;
+  color: $black;
+  a, a:visited {
+    white-space: nowrap;
+    color: $accent;
+    font-style: italic;
+    padding: 0.1em 0.1em;
+    border-radius: 0.3em;
+    &:hover, &:focus {
+      box-shadow: $shadow;
+    }
+    &:active {
+      box-shadow: $shadow inset;
+    }
+  }
+}
+

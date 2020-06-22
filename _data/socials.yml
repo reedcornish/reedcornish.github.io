@@ -1,0 +1,8 @@
+- name: Github
+  link: https://github.com/reedcornish
+  icon: fab fa-github
+
+- name: Linkedin
+  link: https://www.linkedin.com/in/reedcornish
+  icon: fab fa-linkedin
+

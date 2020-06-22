@@ -1,0 +1,20 @@
+<div id="topnav">
+  <div>
+    {% for navlink in site.data.topnav-left %}
+      <a href="{{ navlink.link }}"
+        {% if page.url == navlink.link %} 
+          class="current"
+        {% endif %}>
+        {% if navlink.icon %} 
+          <span class="{{ navlink.icon }}"></span>
+        {% else %}
+          {{ navlink.name }}
+        {% endif %}
+      </a>
+    {% endfor %}
+  </div>
+  <div>
+    {% include socials.html %}
+  </div>
+</div>
+
