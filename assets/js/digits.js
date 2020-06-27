@@ -1,8 +1,11 @@
 var el = x => document.getElementById(x);
 
+var api_url = 'https://api.reedcornish.com/digits';
+
 var canvas = document.querySelector("canvas");
 var ctx = canvas.getContext('2d');
 var clearBtn = el('clear');
+var latest_request_time = 0;
 
 var signaturePad = new SignaturePad(canvas, {
   minWidth: 2.5,
@@ -10,11 +13,13 @@ var signaturePad = new SignaturePad(canvas, {
 });
 
 function resizeCanvas() {
+  var data = signaturePad.toData();
   var ratio =  Math.max(window.devicePixelRatio || 1, 1);
   canvas.width = canvas.offsetWidth * ratio;
   canvas.height = canvas.offsetHeight * ratio;
   canvas.getContext("2d").scale(ratio, ratio);
   signaturePad.clear();
+  signaturePad.fromData(data);
 }
 
 window.addEventListener("resize", resizeCanvas);
@@ -45,12 +50,11 @@ function invertCanvas() {
 signaturePad.onEnd = function () {
   el("result").innerHTML = "...";
   var xhr = new XMLHttpRequest();
-  xhr.open("POST", 'https://digits.reedcornish.com/analyze', true);
-  xhr.onerror = function() {
-    alert(xhr.responseText);
-  };
+  xhr.open("POST", api_url, true);
+  var this_request_time = (new Date()).getTime();
+  latest_request_time = this_request_time;
   xhr.onload = function(e) {
-    if (this.readyState === 4) {
+    if (this.readyState === 4 && latest_request_time == this_request_time) {
       var response = JSON.parse(e.target.responseText);
       el("result").innerHTML = response["result"];
     }
