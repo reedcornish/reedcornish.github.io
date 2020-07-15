@@ -8,8 +8,8 @@ var clearBtn = el('clear');
 var latest_request_time = 0;
 
 var signaturePad = new SignaturePad(canvas, {
-  minWidth: 2.5,
-  maxWidth: 5,
+  minWidth: 2,
+  maxWidth: 7,
 });
 
 function resizeCanvas() {
