@@ -1,1 +1,1 @@
-# [reedcornish.com](https://reedcornish.com)
+# [reedcornish.com/digits](https://reedcornish.com/digits)

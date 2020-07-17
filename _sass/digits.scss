@@ -7,25 +7,89 @@
     border: 1px solid grey;
     background: #eee;
     width: 100%;
-    max-width: 260px;
+    max-width: 280px;
     height: 300px;
+  }
+  .mybutton {
+    padding-top: 0;
   }
   #prompt {
     font-size: 20px;
   }
-  #result-prompt {
-    font-size: 20px;
-    margin-top: 15px;
+  #clear-btn {
     margin-bottom: 20px;
-    float: left;
   }
-  #result {
-    float: right;
-    font-size: 35px;
-    font-weight: bold;
+  #correction {
+    text-align: center;
+    display: none;
+    height: 100px;
+    ul {
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      height: 45px;
+      margin-top: 10px;
+      cursor: pointer;
+      padding: 0;
+      li {
+        -webkit-user-select: none;  
+        -moz-user-select: none;    
+        -ms-user-select: none;      
+        height: 30px;
+        padding: 2px 0;
+        width: 100%;
+        margin: 0 1px;
+        user-select: none;
+        border: 1px solid $black;
+        border-radius: 0.3em;
+        box-shadow: -1px 1px 0.5px 0.5px #ccc;
+        &.bigdigit, &:hover, &:focus {
+          font-size: 30px;
+          font-weight: bold;
+          height: 50px;
+          padding-top: 0;
+          width: 150%;
+        }
+      }
+    }
   }
-  #clear {
-      margin-bottom: 20px;
+  #result-wrap {
+    padding-left: 5px;
+    text-align: center;
+    height: 100px;
+    #result {
+      display: inline-block;
+      width: 100px;
+      cursor: default;
+      opacity: 0;
+      font-size: 50px;
+      font-weight: bold;
+    }
+    #wrong-wrap {
+      position: relative;
+      vertical-align: top;
+      width: 0;
+      height: 0;
+      display: inline-block;
+      opacity: 0;
+      #wrong-btn {
+        border-radius: 0.3em;
+        box-shadow: -2px 2px 3px 3px #ccc;
+        padding: 5px 6px;
+        &:hover, &:focus {
+          #edit {
+            color: $accent;
+          }
+        }
+        &:active {
+          box-shadow: -1px 1px 2px 2px #ccc inset;
+        }
+        #edit {
+          font-size: 15px;
+          color: $grey;
+        }
+      }
+    }
   }
 }
 

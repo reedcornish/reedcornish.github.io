@@ -28,10 +28,6 @@ big {
   font-weight: bold;
 }
 
-p {
-  padding-bottom: 1em;
-}
-
 a {
   text-decoration: none;
   text-align: center;
@@ -51,7 +47,7 @@ button {
   display: flex;
   align-items: center;
   justify-content: center;
-  * {
+  & > button {
     cursor: pointer;
     padding: 10px 14px;
     font-size: 20px;

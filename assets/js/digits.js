@@ -1,11 +1,18 @@
 var el = x => document.getElementById(x);
+var clearPressed = false;
 
 var api_url = 'https://api.reedcornish.com/digits';
 
+var wrongWrap = el('wrong-wrap');
+var result = el('result');
+var resultWrap = el('result-wrap');
 var canvas = document.querySelector("canvas");
 var ctx = canvas.getContext('2d');
-var clearBtn = el('clear');
+var clearBtn = el('clear-btn');
+var wrongBtn = el('wrong-btn');
+var correctionDiv = el('correction');
 var latest_request_time = 0;
+var empty_result = result.innerHTML
 
 var signaturePad = new SignaturePad(canvas, {
   minWidth: 2,
@@ -47,8 +54,32 @@ function invertCanvas() {
   ctx.putImageData(imageData, 0, 0);
 };
 
+showWrongDiv = function () {
+  wrongWrap.style.opacity = 1;
+  wrongBtn.style.cursor = 'pointer';
+  wrongBtn.onclick = showCorrectionDiv;
+}
+
+hideWrongDiv = function() {
+  wrongWrap.style.opacity = 0;
+  wrongBtn.style.cursor = 'default';
+  wrongBtn.onclick = 'none';
+}
+
+showCorrectionDiv = function () {
+  correctionDiv.style.display = 'block';
+  resultWrap.style.display = 'none';
+}
+
+hideCorrectionDiv = function() {
+  correctionDiv.style.display = 'none';
+  resultWrap.style.display = 'block';
+}
+
 signaturePad.onEnd = function () {
-  el("result").innerHTML = "...";
+  resetResult();
+  hideWrongDiv();
+  clearPressed = false;
   var xhr = new XMLHttpRequest();
   xhr.open("POST", api_url, true);
   var this_request_time = (new Date()).getTime();
@@ -56,8 +87,14 @@ signaturePad.onEnd = function () {
   xhr.onload = function(e) {
     if (this.readyState === 4 && latest_request_time == this_request_time) {
       var response = JSON.parse(e.target.responseText);
-      el("result").innerHTML = response["result"];
-    }
+      result.innerHTML = response["result"];
+      result.style.opacity = 1;
+      setTimeout(function() {
+        if (!clearPressed && latest_request_time == this_request_time) {
+          showWrongDiv();
+        }
+      }, 2000);
+    };
   };
 
   invertCanvas();
@@ -69,8 +106,68 @@ signaturePad.onEnd = function () {
   xhr.send(fd);
 };
 
-clearBtn.onclick = function () {
+clear = function () {
+  clearPressed = true;
   signaturePad.clear();
-  el('result').innerHTML = '';
+  result.innerHTML = empty_result;
+  result.style.opacity = 0;
+  hideCorrectionDiv();
+  hideWrongDiv();
+  clearSelectedDigit();
+  clearBtn.blur();
 };
+clearBtn.onclick = clear;
+
+var selectedDigit = null;
+clearSelectedDigit = function() {
+  if (selectedDigit) {
+    selectedDigit.classList.remove('bigdigit');
+    selectedDigit.style.backgroundColor = 'white';
+    selectedDigit.style.color = 'black';
+    selectedDigit = null;
+  }
+}
+
+resetResult = function() {
+  result.innerHTML = empty_result;
+  result.style.opacity = 0;
+  result.style.fontSize = '50px';
+  result.style.fontWeight = 'bold';
+}
+
+submit = function() {
+  clear();
+  result.innerHTML = 'Thanks!'
+  result.style.opacity = 1;
+  result.style.fontSize = '25px';
+  result.style.fontWeight = 'normal';
+  deactivateSubmitBtn();
+  clearBtn.blur();
+}
+
+deactivateSubmitBtn = function() {
+  clearBtn.innerHTML = 'Clear';
+  clearBtn.onclick = clear;
+}
+
+activateSubmitBtn = function() {
+  if (clearBtn.innerHTML === 'Clear') {
+    clearBtn.innerHTML = 'Submit';
+    clearBtn.onclick = submit;
+  }
+}
+
+digitClick = function (obj) {
+  var sd = selectedDigit ? selectedDigit.innerHTML : -1;
+  clearSelectedDigit();
+  if (sd === obj.innerHTML) {
+    deactivateSubmitBtn();
+  } else {
+    obj.style.backgroundColor = 'rgb(90, 150, 231)';
+    obj.style.color = '#f2f2f2';
+    obj.classList.add('bigdigit');
+    selectedDigit = obj;
+    activateSubmitBtn();
+  }
+}
 
