@@ -1,7 +1,8 @@
 var el = x => document.getElementById(x);
 var clearPressed = false;
 
-var api_url = 'https://api.reedcornish.com/digits';
+var api_url = 'https://api.reedcornish.com/digits'
+var prediction_id = null;
 
 var wrongWrap = el('wrong-wrap');
 var result = el('result');
@@ -81,12 +82,13 @@ signaturePad.onEnd = function () {
   hideWrongDiv();
   clearPressed = false;
   var xhr = new XMLHttpRequest();
-  xhr.open("POST", api_url, true);
+  xhr.open("POST", api_url + 'analyze', true);
   var this_request_time = (new Date()).getTime();
   latest_request_time = this_request_time;
   xhr.onload = function(e) {
     if (this.readyState === 4 && latest_request_time == this_request_time) {
       var response = JSON.parse(e.target.responseText);
+      prediction_id = response["prediction_id"];
       result.innerHTML = response["result"];
       result.style.opacity = 1;
       setTimeout(function() {
@@ -105,6 +107,25 @@ signaturePad.onEnd = function () {
   fd.append("file", blob);
   xhr.send(fd);
 };
+
+submit = function() {
+  correction = selectedDigit.innerHTML;
+
+  clear();
+  result.innerHTML = 'Thanks!'
+  result.style.opacity = 1;
+  result.style.fontSize = '25px';
+  result.style.fontWeight = 'normal';
+  deactivateSubmitBtn();
+  clearBtn.blur();
+
+  var xhr = new XMLHttpRequest();
+  xhr.open("POST", api_url + 'correction', true);
+  var fd = new FormData();
+  fd.append('correction', new Blob([correction], {type: 'text/plain'}));
+  fd.append('prediction_id', new Blob([prediction_id], {type: 'text/plain'}));
+  xhr.send(fd);
+}
 
 clear = function () {
   clearPressed = true;
@@ -135,16 +156,6 @@ resetResult = function() {
   result.style.fontWeight = 'bold';
 }
 
-submit = function() {
-  clear();
-  result.innerHTML = 'Thanks!'
-  result.style.opacity = 1;
-  result.style.fontSize = '25px';
-  result.style.fontWeight = 'normal';
-  deactivateSubmitBtn();
-  clearBtn.blur();
-}
-
 deactivateSubmitBtn = function() {
   clearBtn.innerHTML = 'Clear';
   clearBtn.onclick = clear;
@@ -162,6 +173,7 @@ digitClick = function (obj) {
   clearSelectedDigit();
   if (sd === obj.innerHTML) {
     deactivateSubmitBtn();
+    selectedDigit = null;
   } else {
     obj.style.backgroundColor = 'rgb(90, 150, 231)';
     obj.style.color = '#f2f2f2';
